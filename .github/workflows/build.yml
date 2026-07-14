@@ -17,6 +17,7 @@ env:
   
 jobs:
   build-ubuntu:
+    if: false  # This disables the job without removing the code
     continue-on-error: true
     strategy:
       fail-fast: false
@@ -89,6 +90,7 @@ jobs:
         path: ./bin/Cemu
 
   build-appimage:
+    if: false  # This disables the job without removing the code
     strategy:
       fail-fast: false
       matrix:
@@ -205,6 +207,7 @@ jobs:
         path: ./src/resource/cemu-${{ inputs.next_version_major }}.${{ inputs.next_version_minor }}-windows-x64-installer.exe
 
   build-macos:
+    if: false  # This disables the job without removing the code
     runs-on: macos-14
     strategy:
       fail-fast: false

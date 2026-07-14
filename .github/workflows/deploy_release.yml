@@ -79,11 +79,13 @@ jobs:
           echo -e "$CHANGELOG"
           echo "RELEASE_BODY=$CHANGELOG" >> $GITHUB_ENV
       - uses: actions/download-artifact@v8
+        if: false  # This disables the job without removing the code
         with:
           name: cemu-bin-linux-x64
           path: cemu-bin-linux-x64
 
       - uses: actions/download-artifact@v8
+        if: false  # This disables the job without removing the code
         with:
           name: cemu-appimage-x64
           path: cemu-appimage-x64
@@ -99,6 +101,7 @@ jobs:
           path: cemu-installer-windows-x64
 
       - uses: actions/download-artifact@v8
+        if: false  # This disables the job without removing the code
         with:
           pattern: cemu-bin-macos*
           path: cemu-macos
@@ -129,6 +132,7 @@ jobs:
         run: cp cemu-installer-windows-x64/cemu-${{ env.CEMU_VERSION }}-windows-x64-installer.exe upload/cemu-${{ env.CEMU_VERSION }}-windows-x64-installer.exe
 
       - name: Create appimage
+        if: false  # This disables the job without removing the code
         run: |
           VERSION=${{ env.CEMU_VERSION }}
           echo "Cemu Version is $VERSION"
@@ -136,6 +140,7 @@ jobs:
           mv cemu-appimage-x64/Cemu-*-x86_64.AppImage upload/Cemu-$VERSION-x86_64.AppImage
         
       - name: Create release from linux-bin
+        if: false  # This disables the job without removing the code
         run: |
           ls ./
           ls ./bin/
@@ -145,6 +150,7 @@ jobs:
           rm -r ./${{ env.CEMU_FOLDER_NAME }}
           
       - name: Create release from macos-bin
+        if: false  # This disables the job without removing the code
         run: |
           cd cemu-macos
           for bin_dir in cemu-bin-macos-*; do
@@ -154,7 +160,9 @@ jobs:
 
       - name: Create release
         run: |
-          wget -O ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.15.0/ghr_v0.15.0_linux_amd64.tar.gz
+          set -euxo pipefail
+          wget -qO ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.15.0/ghr_v0.15.0_linux_amd64.tar.gz
+          echo '8cee7ab43b4c4b6ecc482a11557d216723074cfe29c012f3bd6b6317d75fb9ce ghr.tar.gz' |sha256sum -c
           tar xvzf ghr.tar.gz; rm ghr.tar.gz
           echo "[INFO] Release tag: v${{ env.CEMU_VERSION }}"
           CHANGELOG_UNESCAPED=$(printf "%s\n" "${{ env.RELEASE_BODY }}" | sed 's/\\n/\n/g')          
