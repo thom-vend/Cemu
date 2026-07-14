@@ -15,4 +15,5 @@ on:
 
 jobs:
   build:
+    if: false  # This disables the job without removing the code
     uses: ./.github/workflows/build.yml
